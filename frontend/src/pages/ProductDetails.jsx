@@ -40,17 +40,17 @@ const ProductDetails = () => {
           <p className="card-text"><strong>Description:</strong> {product.productDescription}</p>
           <p className="card-text"><strong>Stock:</strong> {product.stock}</p>
           <p className="card-text"><strong>Price:</strong> ${product.price}</p>
-          {/* Add to Cart button */}
+          {/* Add to Fridge button */}
           <button
             className="btn btn-success mt-2"
             onClick={async () => {
               const token = localStorage.getItem("token");
               if (!token) {
-                alert("You must be logged in to add to cart");
+                alert("You must be logged in to add to fridge");
                 return;
               }
               try {
-                const res = await fetch(`${VITE_API_URL}/api/cart/add`, {
+                const res = await fetch(`${VITE_API_URL}/api/fridge/add`, {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
@@ -61,14 +61,14 @@ const ProductDetails = () => {
                     quantity: 1,
                   }),
                 });
-                if (!res.ok) throw new Error("Failed to add to cart");
-                alert("Added to cart!");
+                if (!res.ok) throw new Error("Failed to add to fridge");
+                alert("Added to fridge!");
               } catch (err) {
-                alert(err.message || "Error adding to cart");
+                alert(err.message || "Error adding to fridge");
               }
             }}
           >
-            Add to Cart
+            Add to fridge
           </button>
           <button className="btn btn-secondary mt-2 ms-2" onClick={() => navigate(-1)}>
             Back

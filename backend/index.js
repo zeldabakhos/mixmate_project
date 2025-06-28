@@ -4,9 +4,9 @@ const port = 4000
 const userRoutes = require("./routes/users")
 const connectDB = require("./utils/db.js")
 const path = require("path")
-const productRoutes = require("./routes/products")
+const ingredientRoutes = require("./routes/ingredients")
 const invoiceRoutes = require("./routes/invoices")
-const cartRoutes = require("./routes/cart");
+const fridgeRoutes = require("./routes/fridge");
 require('dotenv').config(); // or `import 'dotenv/config'` if using ESM
 
 // MIDDLEWARE
@@ -40,9 +40,9 @@ connectDB()
 
 // ROUTES
 app.use("/api/users", userRoutes)
-app.use("/api/products", productRoutes)
+app.use("/api/ingredients", ingredientRoutes)
 app.use("/api/invoices", invoiceRoutes)
-app.use("/api/cart", cartRoutes);
+app.use("/api/fridge", fridgeRoutes);
 
 // ecommerce
 app.get("/", (req, res) => {

@@ -7,15 +7,15 @@ const VITE_API_URL = import.meta.env.VITE_API_URL;
 const CardComponent = ({ product, title, description, price, imageUrl }) => {
   const navigate = useNavigate();
 
-  // Add to cart handler
-  const handleAddToCart = async () => {
+  // Add to fridge handler
+  const handleAddToFridge = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("You must be logged in to add to cart");
+      alert("You must be logged in to add to fridge");
       return;
     }
     try {
-      const res = await fetch(`${VITE_API_URL}/api/cart/add`, {
+      const res = await fetch(`${VITE_API_URL}/api/fridge/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,10 +26,10 @@ const CardComponent = ({ product, title, description, price, imageUrl }) => {
           quantity: 1
         })
       });
-      if (!res.ok) throw new Error("Failed to add to cart");
-      alert("Added to cart!");
+      if (!res.ok) throw new Error("Failed to add to fridge");
+      alert("Added to fridge!");
     } catch (err) {
-      alert(err.message || "Error adding to cart");
+      alert(err.message || "Error adding to fridge");
     }
   };
   
@@ -55,8 +55,8 @@ const CardComponent = ({ product, title, description, price, imageUrl }) => {
             <button
               type="button"
               className="btn btn-sm btn-outline-primary"
-              onClick={handleAddToCart}
-              title="Add to cart"
+              onClick={handleAddToFridge}
+              title="Add to fridge"
             >
               🛒
             </button>

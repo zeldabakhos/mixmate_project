@@ -1,6 +1,6 @@
-export const renderProducts = (products) => {
-    const dataText = products.map((product) => {
-      return articleElement(product);
+export const renderIngredients = (ingredients) => {
+    const dataText = ingredients.map((ingredient) => {
+      return articleElement(ingredient);
     });
   
     const fragment = document.createDocumentFragment();

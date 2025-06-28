@@ -10,32 +10,32 @@ const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // --- NEW: Cart state from backend ---
-  const [cartQuantity, setCartQuantity] = useState(0);
+  // --- NEW: Fridge state from backend ---
+  const [fridgeQuantity, setFridgeQuantity] = useState(0);
 
   useEffect(() => {
     if (!token) {
-      setCartQuantity(0);
+      setFridgeQuantity(0);
       return;
     }
-    // Fetch cart from backend
-    const fetchCart = async () => {
+    // Fetch Fridge from backend
+    const fetchFridge = async () => {
       try {
-        const res = await fetch(`${VITE_API_URL}/api/cart`, {
+        const res = await fetch(`${VITE_API_URL}/api/fridge`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();
         // Calculate total quantity
         const total = (data.items || []).reduce((sum, item) => sum + item.quantity, 0);
-        setCartQuantity(total);
+        setFridgeQuantity(total);
       } catch (err) {
-        setCartQuantity(0);
+        setFridgeQuantity(0);
       }
     };
-    fetchCart();
+    fetchFridge();
   }, [token]);
 
-  // If you want the cart count to update after add-to-cart, consider using a Context/global state.
+  // If you want the Fridge count to update after add-to-Fridge, consider using a Context/global state.
 
   const hideNav =
     location.pathname === "/login" ||
@@ -57,10 +57,10 @@ const NavBar = () => {
           </Link>
         )}
         <div className="col-md-3 text-end d-flex align-items-center justify-content-end gap-2">
-          {/* CART ICON (only when logged in) */}
+          {/* fridge ICON (only when logged in) */}
           {token && (
-            <Link to="/cart" className="btn btn-light position-relative me-2" title="View Cart">
-              <i className="bi bi-cart3" style={{ fontSize: 28 }}></i>
+            <Link to="/fridge" className="btn btn-light position-relative me-2" title="View fridge">
+              <i className="bi bi-fridge3" style={{ fontSize: 28 }}></i>
               
             </Link>
           )}

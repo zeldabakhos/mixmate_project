@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Pages
-import CreateProduct from "./pages/CreateProduct";
+import CreateIngredient from "./pages/CreateIngredient";
 import HomePage from "./pages/HomePage";
 import LogInPage from "./pages/LogInPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import SignUpPage from "./pages/SignUpPage";
-import ProductDetails from "./pages/ProductDetails";
-import Cart from "./pages/Cart"; // (not CartPage)
+import IngredientDetails from "./pages/IngredientDetails";
+import Fridge from "./pages/Fridge"; // (not FridgePage)
 
 
 //Components
@@ -28,9 +28,9 @@ const App = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LogInPage />} />
             <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/add-product" element={<CreateProduct />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/products/:id" element={<ProductDetails />} />
+            <Route path="/add-ingredient" element={<CreateIngredient />} />
+            <Route path="/fridge" element={<Fridge />} />
+            <Route path="/igredients/:id" element={<IngredientDetails />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

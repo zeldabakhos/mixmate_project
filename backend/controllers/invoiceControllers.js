@@ -1,5 +1,5 @@
 const Invoice = require("../models/invoiceModels");
-const Product = require("../models/productModels");
+const Ingredient = require("../models/ingredientModels");
 
 exports.getInvoice = async (req, res) => {
     try {
@@ -22,40 +22,40 @@ exports.addInvoice = async (req, res) => {
         let totalAmount = 0;
         let validItems = [];
 
-        // Loop through the items and find corresponding products
+        // Loop through the items and find corresponding ingredients
         for (const item of items) {
-            let query = { productName: item.productName };
+            let query = { ingredientName: item.ingredientName };
 
             // If model is provided, refine the search
             if (item.model) {
                 query.model = item.model;
             }
 
-            const product = await Product.findOne(query);
+            const ingredient = await Ingredient.findOne(query);
 
-            if (!product) {
-                return res.status(400).json({ message: `Product '${item.productName}' with model '${item.model}' does not exist.` });
+            if (!ingredient) {
+                return res.status(400).json({ message: `Ingredient '${item.ingredientName}' with model '${item.model}' does not exist.` });
             }
 
-            if (product.stock < item.quantity) {
-                return res.status(400).json({ message: `Not enough stock for '${item.productName}'. Available: ${product.stock}` });
+            if (ingredient.stock < item.quantity) {
+                return res.status(400).json({ message: `Not enough stock for '${item.ingredientName}'. Available: ${ingredient.stock}` });
             }
 
             // Calculate total amount
-            totalAmount += product.price * item.quantity;
+            totalAmount += ingredient.price * item.quantity;
 
             // Add valid item to the list
             validItems.push({
-                productId: product._id,
-                productName: product.productName,
-                model: product.model,
+                ingredientId: ingredient._id,
+                ingredientName: ingredient.ingredientName,
+                model: ingredient.model,
                 quantity: item.quantity,
-                price: product.price
+                price: ingredient.price
             });
 
             // Reduce stock count
-            product.stock -= item.quantity;
-            await product.save();
+            ingredient.stock -= item.quantity;
+            await ingredient.save();
         }
 
         // Create the invoice
