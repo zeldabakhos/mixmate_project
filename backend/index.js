@@ -46,11 +46,15 @@ app.use("/api/fridge", fridgeRoutes);
 
 // ecommerce
 app.get("/", (req, res) => {
-    res.send("Welcome to my API ! e-commerce backed 🤳")
+    res.send("Welcome to Mixmate!")
 })
 
 // image folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+app.use((req, res) => {
+    res.status(404).json({ message: "Route not found" });
+});
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
