@@ -12,29 +12,35 @@ const NavBar = () => {
 
   // --- NEW: Fridge state from backend ---
   const [fridgeQuantity, setFridgeQuantity] = useState(0);
-
   useEffect(() => {
-    if (!token) {
-      setFridgeQuantity(0);
-      return;
-    }
-    // Fetch Fridge from backend
     const fetchFridge = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setFridgeQuantity(0);
+        return;
+      }
+  
       try {
         const res = await fetch(`${VITE_API_URL}/api/fridge`, {
           headers: { Authorization: `Bearer ${token}` }
         });
+  
+        if (!res.ok) {
+          setFridgeQuantity(0);
+          return;
+        }
+  
         const data = await res.json();
-        // Calculate total quantity
         const total = (data.items || []).reduce((sum, item) => sum + item.quantity, 0);
         setFridgeQuantity(total);
       } catch (err) {
         setFridgeQuantity(0);
       }
     };
+  
     fetchFridge();
-  }, [token]);
-
+  }, []);
+  
   // If you want the Fridge count to update after add-to-Fridge, consider using a Context/global state.
 
   const hideNav =

@@ -4,10 +4,17 @@ import.meta.env.VITE_API_URL
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
-const CardComponent = ({ ingredient, title, description, price, imageUrl }) => {
+const CardComponent = ({
+  ingredient,
+  title,
+  description,
+  unit,
+  quantity,
+  imageUrl,
+  showAddToFridgeButton = true,
+}) => {
   const navigate = useNavigate();
 
-  // Add to fridge handler
   const handleAddToFridge = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -22,9 +29,9 @@ const CardComponent = ({ ingredient, title, description, price, imageUrl }) => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          ingredientId: ingredient._id,  // or whatever the ID field is
-          quantity: 1
-        })
+          ingredientId: ingredient._id,
+          quantity: 1,
+        }),
       });
       if (!res.ok) throw new Error("Failed to add to fridge");
       alert("Added to fridge!");
@@ -32,19 +39,24 @@ const CardComponent = ({ ingredient, title, description, price, imageUrl }) => {
       alert(err.message || "Error adding to fridge");
     }
   };
-  
 
   return (
     <article className="col">
-      <div className="card shadow-sm">
-        <img src={imageUrl} alt="Ingredient" style={{ width: "100%", height: "auto" }} />
-        <div className="card-body">
-          <h5 className="card-title">{title}</h5>
-          <p className="card-text">{description}</p>
-          <p className="card-text">
-            <strong>Price: ${price}</strong>
-          </p>
-          <div className="d-flex justify-content-end align-items-center gap-2">
+      <div className="card shadow-sm h-100">
+        <img
+          src={imageUrl}
+          alt={title}
+          style={{ width: "100%", height: "200px", objectFit: "cover" }}
+        />
+        <div className="card-body d-flex flex-column justify-content-between">
+          <div>
+            <h5 className="card-title">{title}</h5>
+            <p className="card-text">{description}</p>
+            <p className="card-text">
+              <strong>Available:</strong> {quantity} {unit}
+            </p>
+          </div>
+          <div className="d-flex justify-content-end align-items-center gap-2 mt-3">
             <button
               type="button"
               className="btn btn-sm btn-outline-secondary"
@@ -52,14 +64,16 @@ const CardComponent = ({ ingredient, title, description, price, imageUrl }) => {
             >
               View
             </button>
-            <button
-              type="button"
-              className="btn btn-sm btn-outline-primary"
-              onClick={handleAddToFridge}
-              title="Add to fridge"
-            >
-              🛒
-            </button>
+            {showAddToFridgeButton && (
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-success"
+                onClick={handleAddToFridge}
+                title="Add to fridge"
+              >
+                ➕
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -1,15 +1,21 @@
-const uri = `http://localhost:4000/api/ingredients/seeingredient`;
-
-export const fetchIngredients = async () => {
+export async function fetchIngredients() {
   try {
-    const response = await fetch(uri);
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
+    const response = await fetch("https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list");
     const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching ingredients:", error);
-    throw error;
+
+    // Transform to match your CardComponent props
+    const ingredients = data.drinks.map((item, index) => ({
+      _id: index,
+      name: item.strIngredient1,
+      description: "", // No description from API
+      unit: "",        // No unit from API
+      quantity: 1,     // Default quantity
+      imageUrl: `https://www.thecocktaildb.com/images/ingredients/${item.strIngredient1}-Medium.png`
+    }));
+
+    return ingredients;
+  } catch (err) {
+    console.error("Error fetching ingredients:", err);
+    throw err;
   }
-};
+}

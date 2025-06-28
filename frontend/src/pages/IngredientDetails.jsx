@@ -12,7 +12,7 @@ const IngredientDetails = () => {
 
   useEffect(() => {
     // Fetch single Ingredient
-    fetch(`${VITE_API_URL}/api/ingredients/seeIngredient/${id}`)
+    fetch(`${VITE_API_URL}/api/ingredients/${id}`)
     .then(res => res.json())
       .then(data => {
         setIngredient(data);
@@ -29,17 +29,15 @@ const IngredientDetails = () => {
       <div className="card" style={{ maxWidth: 600, margin: "0 auto" }}>
         <img
           src={ingredient.imageUrl || "https://placehold.co/300x200"}
-          alt={ingredient.ingredientName}
+          alt={ingredient.name}
           className="card-img-top"
           style={{ maxHeight: 300, objectFit: "cover" }}
         />
         <div className="card-body">
-          <h3 className="card-title">{ingredient.ingredientName}</h3>
-          <p className="card-text"><strong>Brand:</strong> {ingredient.brand}</p>
-          <p className="card-text"><strong>Model:</strong> {ingredient.model}</p>
-          <p className="card-text"><strong>Description:</strong> {ingredient.ingredientDescription}</p>
-          <p className="card-text"><strong>Stock:</strong> {ingredient.stock}</p>
-          <p className="card-text"><strong>Price:</strong> ${ingredient.price}</p>
+          <h3 className="card-title">{ingredient.name}</h3>
+          <p className="card-text"><strong>Unit:</strong> {ingredient.unit}</p>
+          <p className="card-text"><strong>Description:</strong> {ingredient.description}</p>
+          <p className="card-text"><strong>Available:</strong> {ingredient.quantity}</p>
           {/* Add to Fridge button */}
           <button
             className="btn btn-success mt-2"
