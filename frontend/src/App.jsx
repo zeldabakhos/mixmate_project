@@ -8,6 +8,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import SignUpPage from "./pages/SignUpPage";
 import IngredientDetails from "./pages/IngredientDetails";
 import Fridge from "./pages/Fridge"; // (not FridgePage)
+import DrinksPage from "./pages/DrinksPage";
 
 
 //Components
@@ -32,6 +33,8 @@ const App = () => {
             <Route path="/fridge" element={<Fridge />} />
             <Route path="/igredients/:id" element={<IngredientDetails />} />
             <Route path="*" element={<NotFoundPage />} />
+            <Route path="/drinks" element={<DrinksPage />} />
+
           </Routes>
         </main>
         <FooterComp/>

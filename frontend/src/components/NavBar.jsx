@@ -10,7 +10,6 @@ const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // --- NEW: Fridge state from backend ---
   const [fridgeQuantity, setFridgeQuantity] = useState(0);
   useEffect(() => {
     const fetchFridge = async () => {
@@ -19,17 +18,17 @@ const NavBar = () => {
         setFridgeQuantity(0);
         return;
       }
-  
+
       try {
         const res = await fetch(`${VITE_API_URL}/api/fridge`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-  
+
         if (!res.ok) {
           setFridgeQuantity(0);
           return;
         }
-  
+
         const data = await res.json();
         const total = (data.items || []).reduce((sum, item) => sum + item.quantity, 0);
         setFridgeQuantity(total);
@@ -37,11 +36,9 @@ const NavBar = () => {
         setFridgeQuantity(0);
       }
     };
-  
+
     fetchFridge();
   }, []);
-  
-  // If you want the Fridge count to update after add-to-Fridge, consider using a Context/global state.
 
   const hideNav =
     location.pathname === "/login" ||
@@ -59,19 +56,28 @@ const NavBar = () => {
       <div className="container-fluid">
         {!hideNav && (
           <Link className="navbar-brand" to="/">
-            E-commerce
+            Mixmate
           </Link>
         )}
+
+        {/* Drinks page link (only when logged in) */}
+        {!hideNav && token && (
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            <li className="nav-item">
+              <Link className="nav-link text-white" to="/drinks">
+                Drinks
+              </Link>
+            </li>
+          </ul>
+        )}
+
         <div className="col-md-3 text-end d-flex align-items-center justify-content-end gap-2">
-          {/* fridge ICON (only when logged in) */}
           {token && (
             <Link to="/fridge" className="btn btn-light position-relative me-2" title="View fridge">
               <i className="bi bi-fridge3" style={{ fontSize: 28 }}></i>
-              
             </Link>
           )}
 
-          {/* Show avatar if logged in and avatar exists */}
           {token && avatar && avatar !== "" && (
             <img
               src={`${VITE_API_URL}/${avatar.replace(/\\/g, "/")}`}
