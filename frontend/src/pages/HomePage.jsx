@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { fetchIngredients } from "../utils/fetchIngredients.js";
 import CardComponent from "../components/CardComponent.jsx";
+
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const HomePage = () => {
   const [ingredients, setIngredients] = useState([]);
@@ -10,9 +11,20 @@ const HomePage = () => {
   const loadIngredients = async () => {
     setLoading(true);
     try {
-      const data = await fetchIngredients();
-      console.log("Fetched ingredients:", data);
-      setIngredients(data);
+      const response = await fetch("https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list");
+      const data = await response.json();
+
+      // Transform ingredients to expected format for CardComponent
+      const formatted = data.drinks.map((item, index) => ({
+        _id: `public-${index}`, // fake ID for frontend only
+        name: item.strIngredient1,
+        description: `Common cocktail ingredient.`,
+        unit: "unit",
+        quantity: 1,
+        imageUrl: `https://www.thecocktaildb.com/images/ingredients/${item.strIngredient1}-Medium.png`
+      }));
+
+      setIngredients(formatted);
       setError(null);
     } catch (err) {
       setError(err.message || "Something went wrong");
@@ -39,7 +51,7 @@ const HomePage = () => {
             description={ingredient.description}
             unit={ingredient.unit}
             quantity={ingredient.quantity}
-            imageUrl={ingredient.imageUrl || "https://placehold.co/300x200"}
+            imageUrl={ingredient.imageUrl}
             showAddToFridgeButton={true}
           />
         ))
