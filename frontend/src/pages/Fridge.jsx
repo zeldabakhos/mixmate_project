@@ -27,7 +27,7 @@ const Fridge = () => {
   }, []);
 
   // Update quantity
-  const handleQuantityChange = async (productId, newQuantity) => {
+  const handleQuantityChange = async (ingredientId, newQuantity) => {
     if (newQuantity < 1) return;
     const token = localStorage.getItem("token");
     try {
@@ -37,7 +37,7 @@ const Fridge = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ productId, quantity: Number(newQuantity) })
+        body: JSON.stringify({ ingredientId, quantity: Number(newQuantity) })
       });
       if (!response.ok) throw new Error("Failed to update quantity");
       const data = await response.json();
@@ -49,7 +49,7 @@ const Fridge = () => {
   
 
   // Remove from fridge
-  const handleRemove = async (productId) => {
+  const handleRemove = async (ingredientId) => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(`${VITE_API_URL}/api/fridge/remove`, {
@@ -58,7 +58,7 @@ const Fridge = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}` 
         },
-        body: JSON.stringify({ productId })
+        body: JSON.stringify({ ingredientId })
       });
       if (!response.ok) throw new Error("Failed to remove item");
       const data = await response.json();
@@ -86,7 +86,7 @@ const Fridge = () => {
           <table className="table align-middle">
             <thead>
               <tr>
-                <th>Product</th>
+                <th>Ingredient</th>
                 <th>Image</th>
                 <th>Model</th>
                 <th>Price</th>
@@ -98,9 +98,9 @@ const Fridge = () => {
             <tbody>
               {fridge.map((item, idx) => (
                 <tr key={item._id || idx}>
-                  <td>{item.productName}</td>
+                  <td>{item.ingredientName}</td>
                   <td>
-                    <img src={item.imageUrl} alt={item.productName} style={{ width: 70, height: 50, objectFit: "cover" }} />
+                    <img src={item.imageUrl} alt={item.ingredientName} style={{ width: 70, height: 50, objectFit: "cover" }} />
                   </td>
                   <td>{item.model}</td>
                   <td>${item.price}</td>
@@ -110,12 +110,12 @@ const Fridge = () => {
                       min={1}
                       value={item.quantity}
                       style={{ width: 60 }}
-                      onChange={e => handleQuantityChange(item.productId || item._id, e.target.value)}
+                      onChange={e => handleQuantityChange(item.ingredientId || item._id, e.target.value)}
                     />
                   </td>
                   <td>${item.price * item.quantity}</td>
                   <td>
-                    <button className="btn btn-danger btn-sm" onClick={() => handleRemove(item.productId || item._id)}>
+                    <button className="btn btn-danger btn-sm" onClick={() => handleRemove(item.ingredientId || item._id)}>
                       Remove
                     </button>
                   </td>

@@ -4,7 +4,7 @@ import.meta.env.VITE_API_URL
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
-const CardComponent = ({ product, title, description, price, imageUrl }) => {
+const CardComponent = ({ ingredient, title, description, price, imageUrl }) => {
   const navigate = useNavigate();
 
   // Add to fridge handler
@@ -22,7 +22,7 @@ const CardComponent = ({ product, title, description, price, imageUrl }) => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          productId: product._id,  // or whatever the ID field is
+          ingredientId: ingredient._id,  // or whatever the ID field is
           quantity: 1
         })
       });
@@ -37,7 +37,7 @@ const CardComponent = ({ product, title, description, price, imageUrl }) => {
   return (
     <article className="col">
       <div className="card shadow-sm">
-        <img src={imageUrl} alt="Product" style={{ width: "100%", height: "auto" }} />
+        <img src={imageUrl} alt="Ingredient" style={{ width: "100%", height: "auto" }} />
         <div className="card-body">
           <h5 className="card-title">{title}</h5>
           <p className="card-text">{description}</p>
@@ -48,7 +48,7 @@ const CardComponent = ({ product, title, description, price, imageUrl }) => {
             <button
               type="button"
               className="btn btn-sm btn-outline-secondary"
-              onClick={() => navigate(`/products/${product._id}`)}
+              onClick={() => navigate(`/ingredients/${ingredient._id}`)}
             >
               View
             </button>

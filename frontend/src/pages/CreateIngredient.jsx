@@ -4,10 +4,10 @@ import.meta.env.VITE_API_URL
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
-const CreateProduct = () => {
+const CreateIngredient = () => {
   const [form, setForm] = useState({
-    productName: "",
-    productDescription: "",
+    ingredientName: "",
+    ingredientDescription: "",
     brand: "",
     model: "",
     stock: "",
@@ -33,17 +33,17 @@ const CreateProduct = () => {
     });
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`${VITE_API_URL}/api/products/addProduct`, {
+      const response = await fetch(`${VITE_API_URL}/api/ingredients/addIngredient`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: data,
       });
       const result = await response.json();
       if (response.ok) {
-        alert("Product added!");
+        alert("Ingredient added!");
         navigate("/"); // redirect to HomePage after creation
       } else {
-        alert(result.message || "Failed to add product");
+        alert(result.message || "Failed to add ingredient");
       }
     } catch (err) {
       alert(err.message || "Network error");
@@ -52,12 +52,12 @@ const CreateProduct = () => {
 
   return (
     <form onSubmit={handleSubmit} className="card p-3 mb-4" style={{ maxWidth: 500, margin: "0 auto" }}>
-      <h5>Add New Product</h5>
+      <h5>Add New ingredient</h5>
       <input
-        name="productName"
+        name="ingredientName"
         className="form-control mb-2"
         placeholder="Name"
-        value={form.productName}
+        value={form.ingredientName}
         onChange={handleChange}
         required
       />
@@ -95,10 +95,10 @@ const CreateProduct = () => {
         required
       />
       <textarea
-        name="productDescription"
+        name="ingredientDescription"
         className="form-control mb-2"
         placeholder="Description"
-        value={form.productDescription}
+        value={form.ingredientDescription}
         onChange={handleChange}
       />
       <input
@@ -109,10 +109,10 @@ const CreateProduct = () => {
         accept="image/*"
       />
       <button type="submit" className="btn btn-primary">
-        Add Product
+        Add Ingredient
       </button>
     </form>
   );
 };
 
-export default CreateProduct;
+export default CreateIngredient;

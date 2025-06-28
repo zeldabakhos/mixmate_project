@@ -1,6 +1,6 @@
-const uri = `http://localhost:4000/api/products/seeproduct`;
+const uri = `http://localhost:4000/api/ingredients/seeingredient`;
 
-export const fetchProducts = async () => {
+export const fetchIngredients = async () => {
   try {
     const response = await fetch(uri);
     if (!response.ok) {
@@ -9,7 +9,7 @@ export const fetchProducts = async () => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error fetching ingredients:", error);
     throw error;
   }
 };
