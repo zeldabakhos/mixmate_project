@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const driver = require("../config/neo4j");
-require('dotenv').config({ path: '../.env.local' });
+require('dotenv').config({ path: '../.env' });
 
 const populate = async () => {
   const session = driver.session();
