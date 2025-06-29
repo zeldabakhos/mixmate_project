@@ -5,8 +5,8 @@ const userRoutes = require("./routes/users")
 const connectDB = require("./utils/db.js")
 const path = require("path")
 const ingredientRoutes = require("./routes/ingredients")
-const invoiceRoutes = require("./routes/invoices")
 const fridgeRoutes = require("./routes/fridge");
+const cocktailRoutes = require("./routes/cocktail");
 require('dotenv').config(); 
 
 // MIDDLEWARE
@@ -41,10 +41,11 @@ connectDB()
 // ROUTES
 app.use("/api/users", userRoutes)
 app.use("/api/ingredients", ingredientRoutes)
-app.use("/api/invoices", invoiceRoutes)
 app.use("/api/fridge", fridgeRoutes);
+app.use("/api/cocktail", cocktailRoutes);
 
-// ecommerce
+
+// mixmate
 app.get("/", (req, res) => {
     res.send("Welcome to Mixmate!")
 })
@@ -56,6 +57,6 @@ app.use((req, res) => {
     res.status(404).json({ message: "Route not found" });
 });
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-})
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running on port ${port}`);
+});

@@ -23,6 +23,7 @@ const CardComponent = ({
       return;
     }
     try {
+      console.log("🧪 Adding ingredient:", title);
       const res = await fetch(`${VITE_API_URL}/api/fridge/add`, {
         method: "POST",
         headers: {

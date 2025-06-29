@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import DrinkCardComponent from "../components/DrinkCardComponent";
 
+// Use VITE_API_URL from Docker env
+const API_BASE = import.meta.env.VITE_API_URL;
+
 const WhatICanMakePage = () => {
   const [fridgeIngredients, setFridgeIngredients] = useState([]);
   const [drinks, setDrinks] = useState([]);
@@ -8,20 +11,24 @@ const WhatICanMakePage = () => {
   // STEP 1 - Fetch ingredients from your fridge
   const fetchFridgeIngredients = async () => {
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:4000/api/fridge", {
+    const res = await fetch(`${API_BASE}/api/fridge`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+
     const data = await res.json();
-    return data.map((item) => item.name.toLowerCase());
+    console.log("🔍 Fridge API response:", data);
+
+    const items = Array.isArray(data) ? data : data.items || [];
+    return items.map((item) => item.name.toLowerCase());
   };
 
-  // ✅ STEP 2 - Fetch full data for each drink
+  // STEP 2 - Fetch full data for each drink
   const fetchFullDrinkData = async (drinkList) => {
     const detailedDrinks = await Promise.all(
       drinkList.map(async (drink) => {
-        const res = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${drink.idDrink}`);
+        const res = await fetch(`${API_BASE}/api/cocktail/details/${drink.idDrink}`);
         const data = await res.json();
-        return data.drinks[0]; // full details
+        return data.drinks[0];
       })
     );
     return detailedDrinks;
@@ -30,37 +37,41 @@ const WhatICanMakePage = () => {
   const filterDrinksByFridge = (drinks, fridgeIngredients) => {
     return drinks.filter((drink) => {
       const ingredients = [];
-  
-      // Collect strIngredient1 to strIngredient15 (some might be null)
+
       for (let i = 1; i <= 15; i++) {
         const ing = drink[`strIngredient${i}`];
         if (ing) ingredients.push(ing.toLowerCase());
       }
-  
-      // Return true only if ALL ingredients are in the fridge
+
       return ingredients.every((ing) => fridgeIngredients.includes(ing));
     });
   };
-  
-  // Fetch fridge + all drinks + filter
+
   useEffect(() => {
-    const loadData = async () => {
-        const fridge = await fetchFridgeIngredients();
-      
-        const res = await fetch("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail");
+    const loadMakeableDrinks = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please login to view your possible drinks.");
+        return;
+      }
+  
+      try {
+        const res = await fetch(`${VITE_API_URL}/api/cocktail/makeable`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
         const data = await res.json();
-      
-        const fullDrinks = await fetchFullDrinkData(data.drinks);
-        const filteredDrinks = filterDrinksByFridge(fullDrinks, fridge);
-      
-        setFridgeIngredients(fridge);
-        setDrinks(filteredDrinks);
-      };
-    
-
-    loadData();
+        setDrinks(data.drinks || []);
+      } catch (err) {
+        console.error("❌ Failed to load makeable drinks:", err);
+      }
+    };
+  
+    loadMakeableDrinks();
   }, []);
-
+  
   return (
     <div className="container py-4">
       <h2 className="mb-4">What I Can Make</h2>

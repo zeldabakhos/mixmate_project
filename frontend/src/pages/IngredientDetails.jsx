@@ -55,10 +55,11 @@ const IngredientDetails = () => {
                     Authorization: `Bearer ${token}`,
                   },
                   body: JSON.stringify({
-                    ingredientId: ingredient._id,
+                    name: ingredient.name,
+                    imageUrl: ingredient.imageUrl || "https://placehold.co/300x200",
                     quantity: 1,
                   }),
-                });
+                });                
                 if (!res.ok) throw new Error("Failed to add to fridge");
                 alert("Added to fridge!");
               } catch (err) {
