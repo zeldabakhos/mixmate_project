@@ -19,7 +19,9 @@ services:
     environment:
       - NODE_ENV=development
       - MONGO_URI=mongodb://mongodb:27017/multidb
-      - REDIS_URI=redis://redis:6379
+      - REDIS_HOST=redis-13569.c275.us-east-1-4.ec2.redns.redis-cloud.com
+      - REDIS_PORT=13569
+      - REDIS_PASSWORD=Vrwboxy4nDNi9iKaMY2jI5HXebMSoFIp
       - NEO4J_URI=neo4j+s://70e90940.databases.neo4j.io
       - NEO4J_USER=neo4j
       - NEO4J_PASSWORD=d63rxWiMewPD_i4bsYsgfOHsHWLufe_xtXTY1HnufUE

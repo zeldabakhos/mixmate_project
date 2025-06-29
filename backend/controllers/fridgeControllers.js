@@ -1,5 +1,7 @@
 const Fridge = require("../models/fridgeModels");
 const Ingredient = require("../models/ingredientModels");
+const Drink = require("../models/drinkModels");
+const { redisClient } = require("../config/redis");
 
 exports.getFridge = async (req, res) => {
     try {
@@ -48,50 +50,67 @@ exports.addToFridge = async (req, res) => {
     if (!name) return res.status(400).json({ message: "Ingredient name is required" });
   
     try {
-      // 1. Ensure the ingredient exists in MongoDB
-      let ingredient = await Ingredient.findOne({ name });
+        let ingredient = await Ingredient.findOne({ name });
   
-      if (!ingredient) {
-        ingredient = await Ingredient.create({
-          name,
-          imageUrl,
-          description: "",
-          unit: "unit",
-          quantity: 0,
-          price: 0
-        });
-      }
+        if (!ingredient) {
+            ingredient = await Ingredient.create({
+                name,
+                imageUrl,
+                description: "",
+                unit: "unit",
+                quantity: 0,
+                price: 0
+            });
+        }
   
-      // 2. Find or create the fridge
-      let fridge = await Fridge.findOne({ user: req.userId });
-      if (!fridge) {
-        fridge = new Fridge({ user: req.userId, items: [] });
-      }
+        let fridge = await Fridge.findOne({ user: req.userId });
+        if (!fridge) {
+            fridge = new Fridge({ user: req.userId, items: [] });
+        }
   
-      // 3. Add or update item in fridge
-      const existing = fridge.items.find(item => item.ingredientId.equals(ingredient._id));
-      if (existing) {
-        existing.quantity += quantity || 1;
-      } else {
-        fridge.items.push({ ingredientId: ingredient._id, quantity: quantity || 1 });
-      }
+        const existing = fridge.items.find(item => item.ingredientId.equals(ingredient._id));
+        if (existing) {
+            existing.quantity += quantity || 1;
+        } else {
+            fridge.items.push({ ingredientId: ingredient._id, quantity: quantity || 1 });
+        }
   
-      await fridge.save();
-      await fridge.populate("items.ingredientId");
+        await fridge.save();
+        await fridge.populate("items.ingredientId");
   
-      const items = fridge.items.map(item => ({
-        ...item.ingredientId._doc,
-        quantity: item.quantity,
-        ingredientId: item.ingredientId._id
-      }));
+        const items = fridge.items.map(item => ({
+            ...item.ingredientId._doc,
+            quantity: item.quantity,
+            ingredientId: item.ingredientId._id
+        }));
+
+        const fridgeIngredients = items.map(item => item.name.toLowerCase());
+        const allDrinks = await Drink.find({}).populate("ingredients.ingredient");
+
+        const makeable = allDrinks.filter(drink =>
+            drink.ingredients.every(ing =>
+                fridgeIngredients.includes(ing.ingredient.name.toLowerCase())
+            )
+        );
+
+        const userKey = `user:${req.userId}`;
+        const alreadyNotified = await redisClient.sMembers(`${userKey}:notified_drinks`);
+        const newDrinks = makeable.filter(drink => !alreadyNotified.includes(drink.name));
+
+        for (const drink of newDrinks) {
+            await redisClient.rPush(`${userKey}:notifications`, JSON.stringify({
+                name: drink.name,
+                time: new Date().toISOString()
+            }));
+            await redisClient.sAdd(`${userKey}:notified_drinks`, drink.name);
+        }
   
-      res.status(200).json({ items });
-  
+        res.status(200).json({ items });
     } catch (err) {
-      console.error("❌ Error adding to fridge:", err);
-      res.status(500).json({ message: "Server error" });
+        console.error("❌ Error adding to fridge:", err);
+        res.status(500).json({ message: "Server error" });
     }
-  };  
+};
 
 exports.removeFromFridge = async (req, res) => {
     const { ingredientId } = req.body;
