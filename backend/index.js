@@ -7,7 +7,7 @@ const path = require("path")
 const ingredientRoutes = require("./routes/ingredients")
 const invoiceRoutes = require("./routes/invoices")
 const fridgeRoutes = require("./routes/fridge");
-require('dotenv').config(); // or `import 'dotenv/config'` if using ESM
+require('dotenv').config(); 
 
 // MIDDLEWARE
 app.use(express.json())

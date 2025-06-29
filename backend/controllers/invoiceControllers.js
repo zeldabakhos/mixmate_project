@@ -24,7 +24,7 @@ exports.addInvoice = async (req, res) => {
 
         // Loop through the items and find corresponding ingredients
         for (const item of items) {
-            let query = { ingredientName: item.ingredientName };
+            let query = { ingredientName: item.name };
 
             // If model is provided, refine the search
             if (item.model) {
@@ -34,11 +34,11 @@ exports.addInvoice = async (req, res) => {
             const ingredient = await Ingredient.findOne(query);
 
             if (!ingredient) {
-                return res.status(400).json({ message: `Ingredient '${item.ingredientName}' with model '${item.model}' does not exist.` });
+                return res.status(400).json({ message: `Ingredient '${item.name}' with model '${item.model}' does not exist.` });
             }
 
             if (ingredient.stock < item.quantity) {
-                return res.status(400).json({ message: `Not enough stock for '${item.ingredientName}'. Available: ${ingredient.stock}` });
+                return res.status(400).json({ message: `Not enough stock for '${item.name}'. Available: ${ingredient.stock}` });
             }
 
             // Calculate total amount

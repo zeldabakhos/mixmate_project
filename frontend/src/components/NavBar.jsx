@@ -59,6 +59,11 @@ const NavBar = () => {
             Mixmate
           </Link>
         )}
+        {token && (
+          <Link to="/what-i-can-make" className="btn btn-outline-light me-2">
+            What I Can Make
+          </Link>
+        )}
 
         {/* Drinks page link (only when logged in) */}
         {!hideNav && token && (

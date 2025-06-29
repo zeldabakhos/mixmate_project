@@ -1,15 +1,18 @@
+# Use official Node image
 FROM node:18-alpine
 
+# Set working directory
 WORKDIR /app
 
-# Copy package files first for better caching
+# Install dependencies
 COPY package*.json ./
-
 RUN npm install
 
-# Copy all files
+# Copy the rest of the frontend source
 COPY . .
 
-EXPOSE 3000
+# Expose the Vite dev server port
+EXPOSE 5173
 
-CMD ["npm", "start"]
+# Use Vite's dev server
+CMD ["npm", "run", "dev"]

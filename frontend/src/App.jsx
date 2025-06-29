@@ -9,6 +9,7 @@ import SignUpPage from "./pages/SignUpPage";
 import IngredientDetails from "./pages/IngredientDetails";
 import Fridge from "./pages/Fridge"; // (not FridgePage)
 import DrinksPage from "./pages/DrinksPage";
+import WhatICanMakePage from "./pages/WhatICanMakePage";
 
 
 //Components
@@ -34,6 +35,9 @@ const App = () => {
             <Route path="/igredients/:id" element={<IngredientDetails />} />
             <Route path="*" element={<NotFoundPage />} />
             <Route path="/drinks" element={<DrinksPage />} />
+            <Route path="/what-i-can-make" element={<WhatICanMakePage />} />
+
+            
 
           </Routes>
         </main>

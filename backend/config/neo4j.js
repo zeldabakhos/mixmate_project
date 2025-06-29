@@ -1,4 +1,7 @@
-const neo4j = require('neo4j-driver');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env.local') });
+
+const neo4j = require("neo4j-driver");
 
 const driver = neo4j.driver(
   process.env.NEO4J_URI,
@@ -7,6 +10,6 @@ const driver = neo4j.driver(
 
 driver.verifyConnectivity()
   .then(() => console.log('✅ Neo4j connected'))
-  .catch(err => console.error('Neo4j connection failed:', err));
+  .catch(err => console.error('❌ Neo4j connection failed:', err));
 
 module.exports = driver;

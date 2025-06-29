@@ -8,7 +8,7 @@ const WhatICanMakePage = () => {
   // STEP 1 - Fetch ingredients from your fridge
   const fetchFridgeIngredients = async () => {
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:3000/api/fridge", {
+    const res = await fetch("http://localhost:4000/api/fridge", {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();

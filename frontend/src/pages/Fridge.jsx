@@ -17,7 +17,10 @@ const Fridge = () => {
         });
         if (!response.ok) throw new Error("Failed to load fridge");
         const data = await response.json();
-        setFridge(data.items || []); // assuming your API returns { items: [...] }
+
+        console.log("🍹 Fetched fridge items:", data.items);
+
+        setFridge(data.items || []);
       } catch (err) {
         setFridge([]);
       }
@@ -88,43 +91,30 @@ const Fridge = () => {
               <tr>
                 <th>Ingredient</th>
                 <th>Image</th>
-                <th>Model</th>
-                <th>Price</th>
-                <th>Qty</th>
-                <th>Total</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               {fridge.map((item, idx) => (
                 <tr key={item._id || idx}>
-                  <td>{item.ingredientName}</td>
+                  <td>{item.name}</td>
                   <td>
-                    <img src={item.imageUrl} alt={item.ingredientName} style={{ width: 70, height: 50, objectFit: "cover" }} />
-                  </td>
-                  <td>{item.model}</td>
-                  <td>${item.price}</td>
-                  <td>
-                    <input
-                      type="number"
-                      min={1}
-                      value={item.quantity}
-                      style={{ width: 60 }}
-                      onChange={e => handleQuantityChange(item.ingredientId || item._id, e.target.value)}
+                    <img
+                      src={item.imageUrl}
+                      alt={item.name}
+                      style={{ width: 70, height: 50, objectFit: "cover" }}
                     />
                   </td>
-                  <td>${item.price * item.quantity}</td>
                   <td>
-                    <button className="btn btn-danger btn-sm" onClick={() => handleRemove(item.ingredientId || item._id)}>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleRemove(item.ingredientId || item._id)}
+                    >
                       Remove
                     </button>
                   </td>
                 </tr>
               ))}
-              <tr>
-                <td colSpan={5} className="text-end fw-bold">Total:</td>
-                <td colSpan={2} className="fw-bold">${total}</td>
-              </tr>
             </tbody>
           </table>
         </div>
