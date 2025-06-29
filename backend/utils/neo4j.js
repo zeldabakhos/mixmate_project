@@ -6,6 +6,11 @@ const driver = neo4j.driver(
   neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 
-const session = driver.session({ database: process.env.NEO4J_DATABASE });
+driver.verifyConnectivity()
+  .then(() => console.log("✅ Neo4j connected"))
+  .catch((err) => {
+    console.error("❌ Neo4j connection error:", err);
+    process.exit(1); // stop backend from running if connection fails
+  });
 
-module.exports = session;
+module.exports = driver;

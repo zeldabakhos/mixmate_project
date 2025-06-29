@@ -54,7 +54,9 @@ const populate = async () => {
             {
               id: d.idDrink,
               name: d.strDrink,
-              ingredients
+              ingredients,
+              thumb: d.strDrinkThumb || null,
+              category: d.strCategory || null
             }
           )
         );

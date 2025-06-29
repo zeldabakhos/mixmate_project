@@ -56,7 +56,7 @@ const WhatICanMakePage = () => {
       }
   
       try {
-        const res = await fetch(`${VITE_API_URL}/api/cocktail/makeable`, {
+        const res = await fetch(`${API_BASE}/api/cocktail/makeable`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
