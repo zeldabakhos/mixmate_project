@@ -46,12 +46,12 @@ exports.updateFridgeItem = async (req, res) => {
 
 exports.addToFridge = async (req, res) => {
     const { name, imageUrl, quantity } = req.body;
-  
+
     if (!name) return res.status(400).json({ message: "Ingredient name is required" });
-  
+
     try {
         let ingredient = await Ingredient.findOne({ name });
-  
+
         if (!ingredient) {
             ingredient = await Ingredient.create({
                 name,
@@ -62,22 +62,22 @@ exports.addToFridge = async (req, res) => {
                 price: 0
             });
         }
-  
+
         let fridge = await Fridge.findOne({ user: req.userId });
         if (!fridge) {
             fridge = new Fridge({ user: req.userId, items: [] });
         }
-  
+
         const existing = fridge.items.find(item => item.ingredientId.equals(ingredient._id));
         if (existing) {
             existing.quantity += quantity || 1;
         } else {
             fridge.items.push({ ingredientId: ingredient._id, quantity: quantity || 1 });
         }
-  
+
         await fridge.save();
         await fridge.populate("items.ingredientId");
-  
+
         const items = fridge.items.map(item => ({
             ...item.ingredientId._doc,
             quantity: item.quantity,
@@ -97,14 +97,23 @@ exports.addToFridge = async (req, res) => {
         const alreadyNotified = await redisClient.sMembers(`${userKey}:notified_drinks`);
         const newDrinks = makeable.filter(drink => !alreadyNotified.includes(drink.name));
 
+        // 🧪 Debug Logs
+        console.log("🧊 Fridge ingredients:", fridgeIngredients);
+        console.log("🍹 All drinks in DB:", allDrinks.map(d => d.name));
+        console.log("✅ Makeable drinks:", makeable.map(d => d.name));
+        console.log("🔁 Already notified:", alreadyNotified);
+        console.log("🆕 New drinks to notify:", newDrinks.map(d => d.name));
+        console.log("🧑‍🔑 Redis key:", userKey);
+
         for (const drink of newDrinks) {
+            console.log(`📤 Pushing notification for: ${drink.name}`);
             await redisClient.rPush(`${userKey}:notifications`, JSON.stringify({
                 name: drink.name,
                 time: new Date().toISOString()
             }));
             await redisClient.sAdd(`${userKey}:notified_drinks`, drink.name);
         }
-  
+
         res.status(200).json({ items });
     } catch (err) {
         console.error("❌ Error adding to fridge:", err);

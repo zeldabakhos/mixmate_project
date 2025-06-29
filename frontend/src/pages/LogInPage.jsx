@@ -25,7 +25,6 @@ const LogInPage = () => {
       if (!password) throw new Error("Password field is empty.");
   
       setError("");
-      console.log("Attempting login with:", { email, password });
   
       const response = await fetch(`${VITE_API_URL}/api/users/login`, {
         method: "POST",
@@ -37,7 +36,6 @@ const LogInPage = () => {
       });
   
       const serverData = await response.json();
-      console.log("Server response:", serverData);
   
       if (response.status === 401) {
         console.warn("Login failed: Unauthorized (wrong email or password)");
@@ -103,7 +101,6 @@ const LogInPage = () => {
             setPassword(e.target.value);
           }}
         />
-      <div style={{color: 'red'}}>Password state: {password}</div>
 
       </div>
       {error && (

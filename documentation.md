@@ -98,3 +98,5 @@ We used the following Redis data types:
 
 * Pub/Sub Integration**:
   Redis `publish` is triggered when new makeable drinks are found, paving the way for future real-time frontend updates via WebSockets or other subscribers.
+
+Tip: To test easily, easiet drink to make is Absolutely Fabulous. Necessary ingredients : Vodka, Cranberry Juice, Champagne. 

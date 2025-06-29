@@ -16,7 +16,6 @@ const CardComponent = ({
 
   const handleAddToFridge = async () => {
     const token = localStorage.getItem("token");
-    console.log("🪪 Token used:", token);
     if (!token) {
       alert("You must be logged in to add to fridge");
       return;
