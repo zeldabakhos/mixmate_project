@@ -26,10 +26,10 @@ exports.getMakeableDrinks = async (req, res) => {
     const drinks = result.records.map(record => {
       const d = record.get("d").properties;
       return {
-        id: d.id,
+        id: d.idDrink, // ✅ Fix here
         name: d.name,
         category: d.category || null,
-        thumbnail: d.thumbnail || null,
+        thumb: d.thumb || null,
       };
     });
     console.log("✅ Matching drinks:", drinks);

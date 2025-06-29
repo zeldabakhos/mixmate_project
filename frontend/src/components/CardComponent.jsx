@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import.meta.env.VITE_API_URL;
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
@@ -33,7 +32,7 @@ const CardComponent = ({
         body: JSON.stringify({
           name: title,
           imageUrl: imageUrl || "https://placehold.co/300x200",
-          quantity: 1
+          quantity: 1,
         }),
       });
       if (!res.ok) throw new Error("Failed to add to fridge");
@@ -43,7 +42,6 @@ const CardComponent = ({
       alert(err.message || "Error adding to fridge");
     }
   };
-  
 
   return (
     <article className="col">
@@ -52,6 +50,11 @@ const CardComponent = ({
           src={imageUrl}
           alt={title}
           style={{ width: "100%", height: "200px", objectFit: "cover" }}
+          onLoad={() => console.log("📸 Loaded image for:", title, "| URL:", imageUrl)}
+          onError={(e) => {
+            console.warn("❌ Broken image URL:", imageUrl);
+            e.target.src = "https://placehold.co/300x200";
+          }}
         />
         <div className="card-body d-flex flex-column justify-content-between">
           <div>

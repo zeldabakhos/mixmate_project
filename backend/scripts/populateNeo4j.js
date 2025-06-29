@@ -45,21 +45,22 @@ const populate = async () => {
         await session.writeTransaction(tx =>
           tx.run(
             `
-            MERGE (d:Drink {id: $id, name: $name})
+            MERGE (d:Drink {idDrink: $idDrink})
+            SET d.name = $name, d.thumb = $thumb, d.category = $category                       
             WITH d
             UNWIND $ingredients AS ing
               MERGE (i:Ingredient {name: ing})
               MERGE (d)-[:HAS]->(i)
             `,
             {
-              id: d.idDrink,
+              idDrink: d.idDrink,
               name: d.strDrink,
               ingredients,
               thumb: d.strDrinkThumb || null,
               category: d.strCategory || null
             }
           )
-        );
+        );        
       } catch (err) {
         console.error(`❌ Error processing drink ID ${drink.idDrink}:`, err.message);
       }

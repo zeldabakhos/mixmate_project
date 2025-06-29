@@ -78,9 +78,10 @@ const NavBar = () => {
 
         <div className="col-md-3 text-end d-flex align-items-center justify-content-end gap-2">
           {token && (
-            <Link to="/fridge" className="btn btn-light position-relative me-2" title="View fridge">
-              <i className="bi bi-fridge3" style={{ fontSize: 28 }}></i>
+            <Link to="/fridge" className="btn btn-outline-light me-2">
+              Fridge
             </Link>
+
           )}
 
           {token && avatar && avatar !== "" && (
