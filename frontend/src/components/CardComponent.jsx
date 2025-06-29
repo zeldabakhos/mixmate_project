@@ -50,7 +50,6 @@ const CardComponent = ({
           src={imageUrl}
           alt={title}
           style={{ width: "100%", height: "200px", objectFit: "cover" }}
-          onLoad={() => console.log("📸 Loaded image for:", title, "| URL:", imageUrl)}
           onError={(e) => {
             console.warn("❌ Broken image URL:", imageUrl);
             e.target.src = "https://placehold.co/300x200";
