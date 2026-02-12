@@ -15,10 +15,12 @@ exports.getMakeableDrinks = async (req, res) => {
       .filter(item => item.ingredientId && item.ingredientId.name)
       .map(item => item.ingredientId.name.toLowerCase());
 
-    const query = `
+      const query = `
       MATCH (d:Drink)-[:HAS]->(i:Ingredient)
       WITH d, collect(toLower(i.name)) AS requiredIngredients
-      WHERE all(ingredient IN requiredIngredients WHERE ingredient IN $fridge)
+      WHERE all(ingredient IN requiredIngredients WHERE 
+        any(fridgeItem IN $fridge WHERE fridgeItem CONTAINS ingredient OR ingredient CONTAINS fridgeItem)
+      )
       RETURN d
     `;
 
